@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK" style="cursor: default">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+
+    <!-- jQuery library -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <!-- Tailored CSS -->
+    <link rel="stylesheet" type="text/css" href="static/css/module.css" />
+
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico" />
+
+    <!-- Tailored JavaScript-->
+    <script src="static/js/ExtractData.js" type="text/javascript"></script>
+    <script src="static/js/ComponentController.js" type="text/javascript"></script>
+    <script src="static/js/FetchTool.js" type="text/javascript"></script>
+    <script src="static/js/jquery.print.min.js" type="text/JavaScript"></script>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>紫微斗數</title>
+</head>
+
+<body>
+    <nav class="navbar bg-light">
+        <ul id="nav_container" class="">
+            <li id="form_list" class="">
+                <form class="form-inline" style="flex-flow: row nowrap">
+                    <select id="time">
+                        <option value="1" selected>子時(00:00 - 00:59)</option>
+                        <option value="2">丑時(01:00 - 02:59)</option>
+                        <option value="3">寅時(03:00 - 04:59)</option>
+                        <option value="4">卯時(05:00 - 06:59)</option>
+                        <option value="5">辰時(07:00 - 08:59)</option>
+                        <option value="6">巳時(09:00 - 10:59)</option>
+                        <option value="7">午時(11:00 - 12:59)</option>
+                        <option value="8">未時(13:00 - 14:59)</option>
+                        <option value="9">申時(15:00 - 16:59)</option>
+                        <option value="10">酉時(17:00 - 18:59)</option>
+                        <option value="11">戍時(19:00 - 20:59)</option>
+                        <option value="12">亥時(21:00 - 22:59)</option>
+                        <option value="1">子時(23:00 - 23:59)</option>
+                    </select>
+                    <select id="gender">
+                        <option value="0">女</option>
+                        <option value="1">男</option>
+                    </select>
+                    <select id="dateType">
+                        <option value="1" selected>陽曆</option>
+                        <option value="2">陰曆</option>
+                    </select>
+                    <label for="day"><strong>日:</strong></label>
+                    <input id="day" class="form-control mr-sm-2" type="text" placeholder="日" required />
+                    <label for="day"><strong>月:</strong></label>
+                    <input id="month" class="form-control mr-sm-2" type="text" placeholder="月" required />
+                    <label for="day"><strong>年:</strong></label>
+                    <input id="year" class="form-control mr-sm-2" type="text" placeholder="年" required />
+                    <input id="submitBtn" class="btn btn-success" type="button" value="起盤" onclick="createModule()" />
+                </form>
+            </li>
+        </ul>
+    </nav>
+    <section id="first_sec"></section>
+    <section id="second_sec"></section>
+    <section id="third_sec"></section>
+    <script text="text/javascript">
+        // Equal to $(document).ready(() => { ... });
+        $(() => {
+            adjustFontSize($(window).width() * 0.01, $(window).height() * 0.01);
+            $(window).resize(() => {
+                let winWidth = $(window).width() * 0.01;
+                let winHeight = $(window).height() * 0.01;
+                adjustFontSize(winWidth, winHeight);
+            });
+        });
+
+        function adjustFontSize(winWidth, winHeight) {
+            let font_size =
+                Math.pow(Math.pow(winWidth, 2) * Math.pow(winHeight, 2), 0.5) / 9;
+            let offset = 1;
+            if (winWidth < winHeight) {
+                offset -= (winHeight - winWidth) / winWidth;
+            }
+            $("html").css({
+                "font-size": `${font_size * offset}px`,
+            });
+        }
+        var section_list = $(document).find("section");
+        const template_obj = getTemplate();
+
+        function createModule() {
+            $("#submitBtn").prop("disabled", true);
+            var time = $("#time").children("option:selected").val();
+            var day = "";
+            var month = "";
+            var year = "";
+            var tim_gone = "";
+            var c_year = "";
+            var gender = $("#gender").children("option:selected").val();
+
+            section_list.each(function (index, elem) {
+                EmbedTemplate(elem.id);
+            });
+
+            if ($("#dateType").children("option:selected").val() == "1") {
+                $.ajax({
+                    url: `${window.location.origin}/getLunarDate`,
+                    method: "POST",
+                    data: {
+                        year: $("#year").val(),
+                        month: $("#month").val(),
+                        day: $("#day").val(),
+                    },
+                    success: function (result, status, xhr) {
+                        //console.log(result, xhr);
+                        //var transformed_date = result["result"];
+                        //var date_arr = transformed_date.split("_");
+                        var timGoneNzodiac = result["GanZhiYear"].split("_");
+                        var date_arr = new Array(
+                            result["lunarYear"],
+                            result["lunarMonth"],
+                            result["lunarDay"],
+                            timGoneNzodiac[0],
+                            timGoneNzodiac[1]
+                        );
+                        if (date_arr) {
+                            c_year = date_arr[0];
+                            month = date_arr[1];
+                            day = date_arr[2];
+                            tim_gone = date_arr[3];
+                            year = date_arr[4];
+
+                            getModulData();
+                        } else {
+                            console.log(status);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.status);
+                        console.log(error);
+                    },
+                });
+            } else {
+                $.ajax({
+                    url: `${window.location.origin}/getLunarYear`,
+                    method: "POST",
+                    data: {
+                        year: $("#year").val(),
+                    },
+                    success: function (result, status, xhr) {
+                        var timGoneNzodiac = result.split("_");
+                        if (timGoneNzodiac) {
+                            c_year = $("#year").val();
+                            month = $("#month").val();
+                            day = $("#day").val();
+                            tim_gone = timGoneNzodiac[0];
+                            year = timGoneNzodiac[1];
+                            getModulData();
+                        } else {
+                            console.log(status);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.status);
+                        console.log(error);
+                    },
+                });
+            }
+
+            function getModulData() {
+                $.ajax({
+                    url: `${window.location.origin}/createModule`,
+                    method: "POST",
+                    data: JSON.stringify({
+                        tim_gone: tim_gone,
+                        year: year,
+                        month: month,
+                        day: day,
+                        time: time,
+                        c_year: c_year,
+                        gender: gender,
+                    }),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    success: function (result, status, xhr) {
+                        LocateStar(result);
+                        $("#submitBtn").prop("disabled", false);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.status);
+                        console.log(error);
+                        $("#submitBtn").prop("disabled", false);
+                    },
+                });
+            }
+        }
+
+        function LocateStar(module) {
+            const special_adjustment = getSpecialAdjustment();
+            let zie_may_pos = {};
+            let keys = [];
+            $.each(module, function (sec_name, section_content) {
+                zie_may_pos[sec_name] = section_content["zie_may"]["position"];
+                keys.push(sec_name);
+                $.each(section_content, function (star, details) {
+                    const node_id = `${details.position}_${details.metaData[1]}`;
+                    const template = template_obj[details.metaData[1]];
+                    $(`#${sec_name}_${node_id}`).append(
+                        `${template["front_begin"]}${
+                template["front_begin"] == "" ? "" : `id='${sec_name}_${star}'`
+              }${template["front_end"]}${details.metaData[0]}${template["end"]}`
+                    );
+                    if (special_adjustment["class_change"].includes(star)) {
+                        $(`#${sec_name}_${star}`).addClass("special_moon");
+                    }
+                });
+                switch (sec_name) {
+                    case "first_sec":
+                        $(`#${sec_name}_510_module_type`).text("天盤");
+                        break;
+                    case "second_sec":
+                        $(`#${sec_name}_510_module_type`).text("地盤");
+                        break;
+                    default:
+                        $(`#${sec_name}_510_module_type`).text("人盤");
+                        break;
+                }
+                $(`#${sec_name}_show_article`).attr("onclick", `ShowOrHideModal('${sec_name}')`);
+            });
+            $(`#first_sec`).before(getArticleTemplate());
+            keys.forEach(key => {
+                QueryAllArticle(key, zie_may_pos[key]);
+            });
+        }
+    </script>
+</body>
+
+</html>

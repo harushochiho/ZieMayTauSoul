@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK" style="cursor: default">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+
+  <!-- jQuery library -->
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+  <!-- Tailored CSS -->
+  <link rel="stylesheet" type="text/css" href="static/css/module.css" />
+
+  <link rel="icon" type="image/x-icon" href="static/img/favicon.ico" />
+
+  <!-- Tailored JavaScript-->
+  <script src="static/js/ExtractData.js" type="text/javascript"></script>
+  <script src="static/js/ComponentController.js" type="text/javascript"></script>
+  <script src="static/js/FetchTool.js" type="text/javascript"></script>
+  <script src="static/js/jquery.print.min.js" type="text/JavaScript"></script>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>紫微斗數</title>
+</head>
+
+<body>
+  <nav class="navbar bg-light">
+    <!--<ul class="navbar-nav" style="display: inline-flex; flex-flow: row nowrap">
+      <li class="nav-item" style="
+            display: inline-flex;
+            width: max-content;
+            flex-flow: row nowrap;
+          ">
+        <form class="form-inline" style="width: max-content; flex-flow: row nowrap">
+          <select id="time">
+            <option value="1" selected>子時(00:00 - 00:59)</option>
+            <option value="2">丑時(01:00 - 02:59)</option>
+            <option value="3">寅時(03:00 - 04:59)</option>
+            <option value="4">卯時(05:00 - 06:59)</option>
+            <option value="5">辰時(07:00 - 08:59)</option>
+            <option value="6">巳時(09:00 - 10:59)</option>
+            <option value="7">午時(11:00 - 12:59)</option>
+            <option value="8">未時(13:00 - 14:59)</option>
+            <option value="9">申時(15:00 - 16:59)</option>
+            <option value="10">酉時(17:00 - 18:59)</option>
+            <option value="11">戍時(19:00 - 20:59)</option>
+            <option value="12">亥時(21:00 - 22:59)</option>
+            <option value="1">子時(23:00 - 23:59)</option>
+          </select>
+          <select id="gender">
+            <option value="0">女</option>
+            <option value="1">男</option>
+          </select>
+          <select id="dateType">
+            <option value="1" selected>陽曆</option>
+            <option value="2">陰曆</option>
+          </select>
+          <label for="day"><strong>日:</strong></label>
+          <input id="day" class="form-control mr-sm-2" type="text" placeholder="日" required />
+          <label for="day"><strong>月:</strong></label>
+          <input id="month" class="form-control mr-sm-2" type="text" placeholder="月" required />
+          <label for="day"><strong>年:</strong></label>
+          <input id="year" class="form-control mr-sm-2" type="text" placeholder="年" required />
+          <button id="submitBtn" class="btn btn-success" type="button" onclick="createModule()">
+            起盤
+          </button>
+        </form>
+      </li>
+      <li class="nav-item" style="float: right; width: fit-content; flex-flow: column nowrap">
+        <div style="
+              width: 35px;
+              height: 5px;
+              margin: 6px 0;
+              background-color: black;
+            "></div>
+        <div style="
+              width: 35px;
+              height: 5px;
+              margin: 6px 0;
+              background-color: black;
+            "></div>
+        <div style="
+              width: 35px;
+              height: 5px;
+              margin: 6px 0;
+              background-color: black;
+            "></div>
+      </li>
+    </ul>-->
+
+    <ul id="nav_container" class="">
+      <li id="form_list" class="">
+        <form class="form-inline" style="flex-flow:row nowrap">
+          <select id="time">
+            <option value="1" selected>子時(00:00 - 00:59)</option>
+            <option value="2">丑時(01:00 - 02:59)</option>
+            <option value="3">寅時(03:00 - 04:59)</option>
+            <option value="4">卯時(05:00 - 06:59)</option>
+            <option value="5">辰時(07:00 - 08:59)</option>
+            <option value="6">巳時(09:00 - 10:59)</option>
+            <option value="7">午時(11:00 - 12:59)</option>
+            <option value="8">未時(13:00 - 14:59)</option>
+            <option value="9">申時(15:00 - 16:59)</option>
+            <option value="10">酉時(17:00 - 18:59)</option>
+            <option value="11">戍時(19:00 - 20:59)</option>
+            <option value="12">亥時(21:00 - 22:59)</option>
+            <option value="1">子時(23:00 - 23:59)</option>
+          </select>
+          <select id="gender">
+            <option value="0">女</option>
+            <option value="1">男</option>
+          </select>
+          <select id="dateType">
+            <option value="1" selected>陽曆</option>
+            <option value="2">陰曆</option>
+          </select>
+          <label for="day"><strong>日:</strong></label>
+          <input id="day" class="form-control mr-sm-2" type="text" placeholder="日" required />
+          <label for="day"><strong>月:</strong></label>
+          <input id="month" class="form-control mr-sm-2" type="text" placeholder="月" required />
+          <label for="day"><strong>年:</strong></label>
+          <input id="year" class="form-control mr-sm-2" type="text" placeholder="年" required />
+          <input id="submitBtn" class="btn btn-success" type="button" value="起盤" onclick="createModule()">
+        </form>
+      </li>
+      <li id="doc_menu" onclick="ShowOrHideModal()">
+        <div style="
+              width: 35px;
+              height: 5px;
+              margin: 6px 0;
+              background-color: black;
+            "></div>
+        <div style="
+              width: 35px;
+              height: 5px;
+              margin: 6px 0;
+              background-color: black;
+            "></div>
+        <div style="
+              width: 35px;
+              height: 5px;
+              margin: 6px 0;
+              background-color: black;
+            "></div>
+      </li>
+    </ul>
+  </nav>
+  <div id="modal_container" class="modal_container" style="display: none;">
+    <!--<iframe id="iframe_modal" src="http://localhost:3000/static/document/ziemay_mice_horse.pdf"></iframe>
+    -->
+    <div id="modal" class="modal">
+    </div>
+    <div class="sticky_nav">
+      <span id="close_button" onclick="ShowOrHideModal()">&times;</span>
+      <a onclick="Getdocument('life')">命宮</a>
+      <a onclick="Getdocument('parent')">父母宮</a>
+      <a onclick="Getdocument('thought')">福德宮</a>
+      <a onclick="Getdocument('housing')">田宅宮</a>
+      <a onclick="Getdocument('career')">事業宮</a>
+      <a onclick="Getdocument('friendship')">奴僕宮</a>
+      <a onclick="Getdocument('travel')">遷移宮</a>
+      <a onclick="Getdocument('illness')">疾厄宮</a>
+      <a onclick="Getdocument('possession')">財帛宮</a>
+      <a onclick="Getdocument('posterity')">子女宮</a>
+      <a onclick="Getdocument('marriage')">夫妻宮</a>
+      <a onclick="Getdocument('sibiling')">兄弟宮</a>
+    </div>
+    <!--
+    <div id="grid-container">
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">巳</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">午</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">未</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">申</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">辰</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">酉</span></div>
+      <div id="center_vec"></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">卯</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">戍</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">寅</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">丑</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">子</span></div>
+      <div class="item"><span class="modal_table_star">星星</span><span class="modal_table_position">亥</span></div>
+    </div>-->
+  </div>
+
+  <script>
+    $(() => {
+      Getdocument('life');
+    });
+
+    function Getdocument(point) {
+      $.ajax({
+        url: `${window.location.origin}/getArticle/${point}`,
+        async: false,
+        method: "GET",
+        success: (article, textStatus, jqXHR) => {
+          let result = JSON.parse(article);
+          $("#modal").empty().append($(result["article"])).scrollTop(0);
+        },
+        error: (jqXHR, textStatus, errorThrown) => {
+          console.log(jqXHR + "\r\n" + textStatus + "\r\n" + errorThrown);
+        }
+      });
+    }
+  </script>
+  <style>
+    #nav_container {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+    }
+
+    #modal_container>section {
+      width: 10%;
+      height: 10%;
+      z-index: 1;
+    }
+
+    #nav_container>li {
+      display: inline-block;
+    }
+
+    #form_list {
+      width: auto;
+    }
+
+    #doc_menu {
+      float: right;
+      width: auto;
+    }
+
+    #close_button {
+      display: inline-block;
+      padding: 8px 16px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      background-color: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      right: 5%;
+      top: 0%;
+      width: fit-content;
+      height: fit-content;
+      font-size: 1.3rem;
+      font-weight: bolder;
+      z-index: inherit;
+    }
+
+    .cs_display {
+      /* Hidden by default */
+      display: flex;
+    }
+
+    .sticky_nav {
+      display: flex;
+      position: relative;
+      z-index: 1;
+      height: fit-content;
+      width: 22%;
+      right: 0;
+      top: 5%;
+      float: left;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .sticky_nav>a {
+      background-color: #28a745;
+      text-align: center;
+      cursor: pointer;
+      border-style: inset;
+      border-radius: 50%;
+      border-width: 1px;
+      border-color: #28a745;
+      color: black;
+      transition-property: text-decoration, color;
+      transition-timing-function: linear;
+    }
+
+    .sticky_nav>a:hover {
+      text-decoration: underline;
+      color: white;
+    }
+
+    .sticky_nav>* {
+      width: 100%;
+      float: left;
+    }
+
+    .sticky_nav>* ::after {
+      content: "";
+      clear: both;
+    }
+
+    #modal_container {
+      position: relative;
+      width: 30vw;
+      height: 90vh;
+      float: left;
+      z-index: 1;
+    }
+
+    .modal {
+      display: flex;
+      position: relative;
+      /* Stay in place */
+      z-index: 1;
+      /* Sit on top */
+      width: 75%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow-y: scroll;
+      overflow-x: visible;
+      /* Enable scroll if needed */
+      background-color: rgb(255, 255, 255);
+      /* Fallback color */
+      background-color: rgba(255, 255, 255, 1);
+      /* Black w/ opacity */
+      border-radius: 25px;
+      border-color: black;
+      border-width: 1px;
+      border-style: outset;
+      box-shadow: 2px 2px 10px rgba(71, 71, 71, 0.4);
+      padding-top: 3%;
+      padding-bottom: 3%;
+      padding-left: 3%;
+      padding-right: 3%;
+      margin-top: 1%;
+      margin-left: 1%;
+      white-space: pre-wrap;
+      flex-direction: column;
+      user-select: none;
+      float: left;
+      scroll-behavior: smooth;
+    }
+
+    .modal::after,
+    .sticky_nav::after {
+      content: "";
+      clear: both;
+    }
+
+    td {
+      border-color: black;
+      border-style: solid;
+      border-width: 2px;
+    }
+
+    td :nth-child(1) {
+      text-align: left;
+    }
+
+    td :nth-child(2) {
+      text-align: right;
+    }
+
+    table::after {
+      content: "\a\a";
+    }
+
+    /*
+    #container {
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+    }
+
+    #grid-container {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-template-rows: auto auto auto auto;
+      grid-row-gap: 0;
+      grid-column-gap: 0;
+    }
+
+    .item {
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+      border-collapse: collapse;
+    }
+
+    .modal_table_star {
+      display: grid;
+      display: -moz-grid;
+      display: -ms-grid;
+      width: 100%;
+      text-orientation: upright;
+      writing-mode: vertical-lr;
+      -ms-writing-mode: tb-lr;
+      align-content: center;
+    }
+
+    .modal_table_position {
+      display: grid;
+      width: 100%;
+      justify-content: end;
+    }
+
+    #center_vec {
+      grid-row: 2 / span 2;
+      grid-column: 2 / span 2;
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+      border-collapse: collapse;
+    }
+
+    #iframe_modal {
+      width: 100%;
+      height: 100%;
+      border-top: 0;
+      border-left: 0;
+      border-bottom: 0;
+      border-right: 0;
+    }*/
+  </style>
+  <section id="first_sec"></section>
+  <section id="second_sec"></section>
+  <section id="third_sec"></section>
+
+</body>
+
+</html>
